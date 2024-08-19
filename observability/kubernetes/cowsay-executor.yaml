@@ -1,0 +1,55 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cowsay-executor
+  namespace: observability-demo
+  labels:
+    app: cowsay-executor
+    app.kubernetes.io/component: cowsay-executor
+    app.kubernetes.io/instance: cowsay-executor
+    app.kubernetes.io/name: cowsay-executor
+    app.kubernetes.io/part-of: observability-demo
+    app.openshift.io/runtime: helidon
+spec:
+  type: ClusterIP
+  selector:
+    app: cowsay-executor
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cowsay-executor
+  namespace: observability-demo
+  labels:
+    app: cowsay-executor
+    app.kubernetes.io/component: cowsay-executor
+    app.kubernetes.io/instance: cowsay-executor
+    app.kubernetes.io/name: cowsay-executor
+    app.kubernetes.io/part-of: observability-demo
+    app.openshift.io/runtime: helidon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cowsay-executor
+  template:
+    metadata:
+      labels:
+        app: cowsay-executor
+        version: v1
+    spec:
+      containers:
+        - name: cowsay-executor
+          image: cowsay-executor:1.0.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 20m
+              memory: 200Mi

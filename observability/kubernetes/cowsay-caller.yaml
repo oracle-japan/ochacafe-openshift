@@ -1,0 +1,85 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cowsay-caller
+  namespace: observability-demo
+  labels:
+    app: cowsay-caller
+    app.kubernetes.io/component: cowsay-caller
+    app.kubernetes.io/instance: cowsay-caller
+    app.kubernetes.io/name: cowsay-caller
+    app.kubernetes.io/part-of: observability-demo
+    app.openshift.io/runtime: helidon
+spec:
+  type: ClusterIP
+  selector:
+    app: cowsay-caller
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cowsay-caller
+  namespace: observability-demo
+  labels:
+    app: cowsay-caller
+    app.kubernetes.io/component: cowsay-caller
+    app.kubernetes.io/instance: cowsay-caller
+    app.kubernetes.io/name: cowsay-caller
+    app.kubernetes.io/part-of: observability-demo
+    app.openshift.io/runtime: helidon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cowsay-caller
+  template:
+    metadata:
+      labels:
+        app: cowsay-caller
+        version: v1
+    spec:
+      containers:
+        - name: cowsay-caller
+          image: cowsay-caller:1.0.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 20m
+              memory: 200Mi
+          env:
+            - name: COWSAY_EXECUTOR_URL
+              value: http://cowsay-executor:8080
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: cowsay-caller
+  namespace: observability-demo
+  labels:
+    app: cowsay-caller
+    app.kubernetes.io/component: cowsay-caller
+    app.kubernetes.io/instance: cowsay-caller
+    app.kubernetes.io/name: cowsay-caller
+    app.kubernetes.io/part-of: observability-demo
+    app.openshift.io/runtime: helidon
+  annotations:
+    openshift.io/host.generated: "true"
+spec:
+  host: cowsay-caller-observability-demo.apps.ocidemo.ochacafe-openshift.net
+  to:
+    kind: Service
+    name: cowsay-caller
+    weight: 100
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
