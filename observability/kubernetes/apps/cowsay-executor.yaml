@@ -42,6 +42,8 @@ spec:
       labels:
         app: cowsay-executor
         version: v1
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
     spec:
       containers:
         - name: cowsay-executor
@@ -53,3 +55,6 @@ spec:
             requests:
               cpu: 20m
               memory: 200Mi
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: cowsay-executor

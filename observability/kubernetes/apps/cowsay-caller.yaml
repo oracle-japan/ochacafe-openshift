@@ -42,6 +42,8 @@ spec:
       labels:
         app: cowsay-caller
         version: v1
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
     spec:
       containers:
         - name: cowsay-caller
@@ -56,6 +58,8 @@ spec:
           env:
             - name: COWSAY_EXECUTOR_URL
               value: http://cowsay-executor:8080
+            - name: OTEL_SERVICE_NAME
+              value: cowsay-caller
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
