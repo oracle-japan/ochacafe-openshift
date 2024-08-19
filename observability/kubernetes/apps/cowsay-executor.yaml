@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
         - name: cowsay-executor
-          image: cowsay-executor:1.0.5
+          image: cowsay-executor:2.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
