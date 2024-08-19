@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
         - name: cowsay-caller
-          image: cowsay-caller:1.0.3
+          image: cowsay-caller:1.0.5
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -60,6 +60,8 @@ spec:
               value: http://cowsay-executor:8080
             - name: OTEL_SERVICE_NAME
               value: cowsay-caller
+            - name: org.eclipse.microprofile.rest.client.propagateHeaders
+              value: baggage, traceparent
 ---
 kind: Route
 apiVersion: route.openshift.io/v1

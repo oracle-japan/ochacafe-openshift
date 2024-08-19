@@ -1,0 +1,71 @@
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: tempo-operator
+    tempo.grafana.com/distribution: openshift
+  name: tracing
+  namespace: observability
+spec:
+  observability:
+    grafana:
+      instanceSelector: {}
+    metrics: {}
+    tracing:
+      jaeger_agent_endpoint: "localhost:6831"
+  resources:
+    total:
+      limits:
+        cpu: "2"
+        memory: 2Gi
+  search:
+    defaultResultLimit: 100
+    maxDuration: 0s
+  managementState: Managed
+  limits:
+    global:
+      ingestion: {}
+      query:
+        maxSearchDuration: 0s
+  serviceAccount: tempo-tracing-tempo
+  template:
+    compactor:
+      replicas: 1
+    distributor:
+      component:
+        replicas: 1
+      tls:
+        enabled: false
+    gateway:
+      component: {}
+      enabled: false
+      ingress:
+        route: {}
+    ingester:
+      replicas: 1
+    querier:
+      replicas: 1
+    queryFrontend:
+      component:
+        replicas: 1
+      jaegerQuery:
+        enabled: true
+        ingress:
+          route:
+            termination: edge
+          type: route
+        monitorTab:
+          enabled: false
+          prometheusEndpoint: ""
+        servicesQueryDuration: 72h0m0s
+  replicationFactor: 1
+  storage:
+    secret:
+      name: tracing-tempo-s3
+      type: s3
+    tls:
+      enabled: false
+  storageSize: 10Gi
+  retention:
+    global:
+      traces: 48h0m0s

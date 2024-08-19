@@ -2,15 +2,15 @@ package com.oracle.jp.cowsay.executor;
 
 import com.github.ricksbrown.cowsay.Cowsay;
 
-import io.helidon.webserver.http.HttpRules;
-import io.helidon.webserver.http.HttpService;
-import io.helidon.webserver.http.ServerRequest;
-import io.helidon.webserver.http.ServerResponse;
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.ServerRequest;
+import io.helidon.webserver.ServerResponse;
+import io.helidon.webserver.Service;
 
-public class CowsayService implements HttpService {
+public class CowsayService implements Service {
 
     @Override
-    public void routing(HttpRules rules) {
+    public void update(Routing.Rules rules) {
         rules.get("/say", this::sayHandler);
     }
 

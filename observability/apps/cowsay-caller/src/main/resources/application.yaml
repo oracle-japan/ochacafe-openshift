@@ -8,4 +8,5 @@ metrics:
   rest-request:
     enabled: false
 
+# MP Rest Client
 cowsay/mp-rest/url: ${COWSAY_EXECUTOR_URL}
