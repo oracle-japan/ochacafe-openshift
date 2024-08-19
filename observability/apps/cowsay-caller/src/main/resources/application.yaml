@@ -8,4 +8,4 @@ metrics:
   rest-request:
     enabled: false
 
-cowsay/mp-rest/url: http://localhost:8080
+cowsay/mp-rest/url: ${COWSAY_EXECUTOR_URL}
