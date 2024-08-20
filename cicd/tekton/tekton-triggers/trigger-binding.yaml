@@ -1,0 +1,13 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: github-push-binding
+  namespace: pipelines-tutorial
+spec:
+  params:
+    - name: gitrepositoryurl
+      value: <your-git-repository-url>
+    - name: revision
+      value: master
+    - name: namespace
+      value: pipeline-tutorial

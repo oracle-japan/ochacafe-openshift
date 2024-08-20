@@ -1,0 +1,21 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: github-push-listener
+  namespace: pipelines-tutorial
+spec:
+  serviceAccountName: trigger-sa
+  triggers:
+    - template:
+        ref: github-push-template
+      bindings:
+      - ref: github-push-binding
+      interceptors:
+        - github:
+            secretRef:
+              secretName: github-webhook-token
+              secretKey: webhook-token
+            eventTypes:
+              - push
+        - cel:
+            filter: "body.ref == 'refs/heads/master' && !body.commits[0].message.startsWith('[Skip-ci]')"

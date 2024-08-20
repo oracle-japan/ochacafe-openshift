@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-webhook-token
+  namespace: pipelines-tutorial
+type: Opaque
+stringData:
+  webhook-token: "<your-webhook-token>"

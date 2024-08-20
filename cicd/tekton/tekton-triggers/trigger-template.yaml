@@ -1,0 +1,41 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: github-push-template
+  namespace: pipelines-tutorial
+spec:
+  params:
+    - name: gitrepositoryurl
+    - name: revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: build-and-push-pieline
+        namespace: pipelines-tutorial
+      spec:
+        pipelineRef:
+          name: build-and-push-pipeline
+        params:
+          - name: gitUrl
+            value: <your-git-repository-url>
+          - name: pathToContext
+            value: .
+          - name: pathToYamlFile
+            value: "go-app.yaml"
+          - name: imageUrl
+            value: <region>.ocir.io/<your-tenacy-name>/<your-ripository-name>
+          - name: imageTag
+            value: "1"
+        #serviceAccountName: trigger-sa
+        serviceAccountName: pipeline
+        workspaces:
+          - name: git-source
+            volumeClaimTemplate:
+              spec:
+                storageClassName: "oci-bv"
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 50Gi
