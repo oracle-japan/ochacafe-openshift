@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cowsay-app-service-monitor
+  namespace: observability-demo
+spec:
+  endpoints:
+  - interval: 30s
+    port: tcp
+    scheme: http
+  selector:
+    matchExpressions:
+      - key: app
+        operator: in
+        values:
+          - cowsay-caller
+          - cowsay-executor
+      
