@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-generator
+  namespace: observability-demo
+spec:
+  completions: 1
+  template:
+    spec:
+      containers:
+        - image: grafana/k6
+          name: k6-client
+          args:
+            - "run"
+            - "--vus"
+            - "10"
+            - "--duration"
+            - "15m"
+            - "script.js"
+          volumeMounts:
+            - name: k6-script
+              mountPath: /home/k6
+      restartPolicy: Never
+      volumes:
+        - name: k6-script
+          configMap:
+            name: config
